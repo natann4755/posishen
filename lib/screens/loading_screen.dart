@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:clima/services/location.dart';
-import 'package:clima/services/networking.dart';
 import 'location_screen.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:clima/services/weather.dart';
 
 
 
@@ -14,9 +13,6 @@ class LoadingScreen extends StatefulWidget {
 
 class _LoadingScreenState extends State<LoadingScreen> {
 
-  static const  String API_KEY = "2278f04dd5ede897f90362371419d187";
-
-
   @override
   void initState() {
     super.initState();
@@ -24,14 +20,10 @@ class _LoadingScreenState extends State<LoadingScreen> {
   }
 
   void getLocation() async{
-    Location location = Location();
-    await location.getCurrentLocation();
+    WeatherModel weatherModel = WeatherModel();
+    var weatherData = await weatherModel.getLocationWeather();
 
-    NetworkHelper networkHelper = NetworkHelper(
-        'http://api.openweathermap.org/data/2.5/weather?lat=${location.latitude}&lon=${location.longitude}&appid=$API_KEY&units=metric');
-    var weatherData = await networkHelper.getData();
-
-    Navigator.push(context,MaterialPageRoute(builder: (context){
+   Navigator.push(context,MaterialPageRoute(builder: (context){
       return LocationScreen(weatherData);
     }));
 
